@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VideoServerApplication.Logic;
 
 namespace VideoServerApplication.Controllers
 {
@@ -19,6 +20,13 @@ namespace VideoServerApplication.Controllers
         public string Get(int id)
         {
             return "value";
+        }
+
+        public List<KeyValuePair<string, string>> Get(string clientName, string time)
+        {
+            ClientCache.Instance.AddClientValue(clientName, time);
+
+            return ClientCache.Instance.Cache.ToList<KeyValuePair<string, string>>(); 
         }
 
         // POST api/values

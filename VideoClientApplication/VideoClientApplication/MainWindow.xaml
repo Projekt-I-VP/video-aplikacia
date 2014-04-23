@@ -30,5 +30,10 @@
         <Slider Name="speedRatioSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaSpeedRatio" Value="1" Width="70" Margin="66,127,64,307" Grid.Row="1" />
         <!-- Seek to slider. Ths slider allows you to jump to different parts of the media playback. -->
         <Slider Name="timelineSlider" Margin="10,417,10,0" ValueChanged="SeekToMediaPosition" Grid.Column="1" Grid.Row="1"/>
+        <Label Height="27" HorizontalAlignment="Left" Margin="61,213,0,212" Name="labelVypisZVlakna" VerticalAlignment="Center" Width="105" Content="toto pise vlakno:" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
+        <Label Height="27" HorizontalAlignment="Left" Margin="61,245,0,180" Name="labelZVlakna" VerticalAlignment="Center" Width="90" Content="" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
+        <TextBox Grid.Row="1" x:Name="myClientName" Height="20" Margin="0,158,0,244">
+            client 
+        </TextBox>
     </Grid>
 </Window>

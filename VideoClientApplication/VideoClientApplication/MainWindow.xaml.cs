@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Threading;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Windows.Threading;
 
 
 namespace VideoClientApplication
@@ -48,6 +49,7 @@ namespace VideoClientApplication
         bool myVideoLoaded = false;
         Alpha oAlpha = null;
         Thread oThread = null;
+        Thread vlakno = null;
 
         public MainWindow()
         {
@@ -102,12 +104,13 @@ namespace VideoClientApplication
                     myMediaElement.Stop();
 
                     // Request that oThread be stopped
-                    oThread.Abort();
+                    //oThread.Abort();
 
                     // Wait until oThread finishes. Join also has overloads
                     // that take a millisecond interval or a TimeSpan object.
-                    oThread.Join();
-
+                    //oThread.Join();
+                    vlakno.Abort();
+                    vlakno.Join();
                     Console.WriteLine();
                     Console.WriteLine("Alpha.Beta has finished");
 
@@ -116,7 +119,7 @@ namespace VideoClientApplication
                 else
                 {
                     //creating new thread
-
+                    /*
                     oAlpha = new Alpha();
 
                     // Create the thread object, passing in the Alpha.Beta method
@@ -129,7 +132,8 @@ namespace VideoClientApplication
                     // Spin for a while waiting for the started thread to become
                     // alive:
                     while (!oThread.IsAlive) ;
-
+                    */
+                    vlakno = StartTheThread(this);
                     myMediaElement.Play();
                     myPlayStopButton.Content = "Stop";
                     timelineSlider.Value = myMediaElement.Position.TotalMilliseconds;
@@ -195,5 +199,36 @@ namespace VideoClientApplication
             myMediaElement.Position = ts;
         }
 
+        public Thread StartTheThread(MainWindow parameter)
+        {
+            var thread = new Thread(() => RealStart(parameter));
+            thread.Start();
+            return thread;
+        }
+
+        private static void RealStart(MainWindow window)
+        {
+            Console.WriteLine("spustilo sa nove vlakno");
+            while (true)
+            {
+                string time = "no";
+                string clientName = "";
+                window.myMediaElement.Dispatcher.Invoke(DispatcherPriority.Normal,
+    (ThreadStart)delegate { 
+        time = window.myMediaElement.Position.ToString();
+        clientName = window.myClientName.Text;
+    }
+);
+
+                HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var odpoved = client.GetStringAsync("http://localhost:50435/api/values?clientName=" +clientName+"&time=" + time);
+                Console.WriteLine(odpoved.Result);
+                window.labelZVlakna.Dispatcher.Invoke(() => window.labelZVlakna.Content = odpoved.Result);
+                    
+                Thread.Sleep(1000);
+            }
+        }
     }
 }
