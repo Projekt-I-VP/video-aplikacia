@@ -17,7 +17,8 @@ using System.Threading;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows.Threading;
-
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace VideoClientApplication
 {
@@ -224,9 +225,11 @@ namespace VideoClientApplication
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var odpoved = client.GetStringAsync("http://localhost:50435/api/values?clientName=" +clientName+"&time=" + time);
-                Console.WriteLine(odpoved.Result);
-                window.labelZVlakna.Dispatcher.Invoke(() => window.labelZVlakna.Content = odpoved.Result);
-                    
+                //Console.WriteLine(odpoved.Result);
+                //window.labelZVlakna.Dispatcher.Invoke(() => window.labelZVlakna.Content = odpoved.Result);
+                //Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(odpoved.Result);
+                List<KeyValuePair<string, string>> values = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<List<KeyValuePair<string, string>>>(odpoved.Result);
+                window.labelZVlakna.Dispatcher.Invoke(() => window.textBox1.Text = values[0].ToString());
                 Thread.Sleep(1000);
             }
         }
