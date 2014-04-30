@@ -40,13 +40,39 @@
         HorizontalAlignment="Left" 
         Margin="10,240,0,0"   
         VerticalAlignment="Top"
-        RenderTransformOrigin="0.482,0.456" Grid.Row="1" />
+        RenderTransformOrigin="0.482,0.456" Grid.Row="1">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Key}" Margin="0" Grid.Column="0" />
+                    <TextBlock Text="{Binding Value}" Margin="0" Grid.Column="1" />
+                </Grid>
+            </DataTemplate>
+            </ListBox.ItemTemplate>
+            </ListBox>
         <ListBox Name="ListBoxZa"
         Height="79" Width="180"
         HorizontalAlignment="Left" 
         Margin="10,363,0,0"   
         VerticalAlignment="Top"
-        RenderTransformOrigin="0.482,0.456" Grid.Row="1" />
+        RenderTransformOrigin="0.482,0.456" Grid.Row="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Key}" Margin="0" Grid.Column="0" />
+                        <TextBlock Text="{Binding Value}" Margin="0" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <Label Height="34" HorizontalAlignment="Left" Margin="10,324,0,94" Name="labelMyTime" VerticalAlignment="Center" Width="180" Content="" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
     </Grid>
 </Window>
