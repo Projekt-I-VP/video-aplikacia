@@ -1,30 +1,30 @@
 ﻿using SharpKml.Dom;
 using SharpKml.Engine;
 using System;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace VideoClientApplication
 {
-    class KMLReader
+    public class KMLReader
     {
+
         public FileInfo file;
 
-        public KMLReader(string full_path)
+        public KMLReader(string full_path) 
         {
             /*file = new FileInfo("@"+full_path);*/
             file = new FileInfo(@"C:\Users\jDzama\Documents\Visual Studio 2012\Projects\kvideudata.kml");
         }
 
-        public void  parsuj(out List<System.TimeSpan> listCasov, out List<KMLudaj> listUdajov)
+        public void parsuj()
         {
-            System.TimeSpan zaciatocnyCas = new System.TimeSpan();
-            Boolean prvyUdaj = true;
-            listCasov = new List<System.TimeSpan>();
-            listUdajov = new List<KMLudaj>();
 
             if (!file.Exists)
             {
@@ -61,10 +61,7 @@ namespace VideoClientApplication
                             switch (szName)
                             {
                                 case "FID":
-                                    if (Convert.ToInt32(szDataValue) == 0)
-                                    {
-                                        prvyUdaj = true;
-                                    }
+                                    udaj.UdajId = Convert.ToInt32(szDataValue);
                                     break;
                                 case "Lat":
                                     udaj.UdajLat = szDataValue;
@@ -72,17 +69,20 @@ namespace VideoClientApplication
                                 case "Lon":
                                     udaj.UdajLon = szDataValue;
                                     break;
+                                case "Altitude":
+                                    udaj.UdajAltitude = szDataValue;
+                                    break;
                                 case "Bearing":
                                     udaj.UdajBearing = szDataValue;
                                     break;
+                                case "Speed":
+                                    udaj.UdajSpeed = szDataValue;
+                                    break;
+                                case "Distance":
+                                    udaj.UdajDistance = szDataValue;
+                                    break;
                                 case "UTC_Time":
-                                    if (prvyUdaj)
-                                    {
-                                        zaciatocnyCas = System.TimeSpan.Parse(szDataValue);
-                                        prvyUdaj = false;
-                                    }
-                                    udaj.UdajTime = System.TimeSpan.Parse(szDataValue) - zaciatocnyCas;
-                                    listCasov.Add(udaj.UdajTime);
+                                    udaj.UdajTime = szDataValue;
                                     break;
                                 default:
                                     break;
@@ -90,15 +90,15 @@ namespace VideoClientApplication
                             //pridal som jeden udaj
                         }
                         //mam hodnoty v udaj, mozem to hadzat do pola po tomto napr...
-                        listUdajov.Add(udaj);
                     }
 
                 }
             }
+            
         }
 
 
-        /*public KMLudaj parsujUvod()
+        public KMLudaj parsujUvod()
         {
 
             if (!file.Exists)
@@ -113,7 +113,7 @@ namespace VideoClientApplication
                     string line = reader.ReadLine();
                     if (line == null) break;
                     Console.WriteLine(line);
-                }
+                }*/
                 KmlFile kmlFile = KmlFile.Load(reader);
 
                 Kml kml = kmlFile.Root as Kml;
@@ -131,7 +131,7 @@ namespace VideoClientApplication
                             string szName = sd.Name;
                             string szDataValue = sd.Text;
                             /*Console.Write(szName + " = ");
-                            Console.WriteLine(szDataValue);
+                            Console.WriteLine(szDataValue);*/
 
                             switch (szName)
                             {
@@ -139,7 +139,7 @@ namespace VideoClientApplication
                                     udaj.UdajId = Convert.ToInt32(szDataValue);
                                     break;
                                 case "Lat":
-                                    if (udaj.UdajId > 0)
+                                    if(udaj.UdajId>0)
                                         udaj.UdajLat = szDataValue;
                                     break;
                                 case "Lon":
@@ -180,6 +180,7 @@ namespace VideoClientApplication
                 }
             }
             return null;
-        }*/
+        }
+
     }
 }

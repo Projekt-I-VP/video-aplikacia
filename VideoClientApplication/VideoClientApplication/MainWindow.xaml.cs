@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using System.Collections.ObjectModel;
 
+
 namespace VideoClientApplication
 {
 
@@ -49,6 +50,10 @@ namespace VideoClientApplication
     {
         bool myVideoIsPlaying = false;
         bool myVideoLoaded = false;
+
+        List<KMLUdaj> listUdajov;
+        List<System.TimeSpan> listCasov;
+
        // Alpha oAlpha = null;
         //Thread oThread = null;
         Thread vlakno = null;
@@ -116,9 +121,18 @@ namespace VideoClientApplication
                     myMediaElement.Source = new Uri(videoFile.FullName);
 
                     myVideoLoaded = true;
+
+                    nacitajKml(dlg);
                 }
 
             }
+        }
+
+        private void nacitajKml(Microsoft.Win32.OpenFileDialog dlg)
+        {
+            string kmlName = dlg.FileName + ".kml";
+            KMLReader kmlreader = new KMLReader(kmlName);
+            kmlreader.parsuj(out listCasov, out listUdajov);
         }
 
         private void Element_MediaOpened(object sender, EventArgs e)
