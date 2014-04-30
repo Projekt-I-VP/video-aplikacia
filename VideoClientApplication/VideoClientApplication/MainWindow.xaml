@@ -1,0 +1,78 @@
+﻿<Window x:Class="VideoClientApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="500" Width="825">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu IsMainMenu="True" Grid.ColumnSpan="2">
+            <MenuItem Header="_File" >
+                <MenuItem Header="_Open..." Click="MenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" Background="#FF4F4F4F">
+            <MediaElement x:Name="myMediaElement" 
+				UnloadedBehavior="Stop" Stretch="Fill" LoadedBehavior="Manual" MediaOpened="Element_MediaOpened" MediaEnded="Element_MediaEnded" OpacityMask="#FF505050"
+     Margin="0,0,-2,35"
+     />
+        </Border>
+        <Button x:Name="myPlayStopButton" Content="Play" HorizontalAlignment="Left" Margin="61,46.4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="Stop_Click"/>
+        <Button x:Name="myPauseButton" Content="Pause" HorizontalAlignment="Left" Margin="61,73,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="Pause_Click"/>
+        <Button x:Name="myFasterButton" Content="+" HorizontalAlignment="Left" Margin="100,100,0,0" Grid.Row="1" VerticalAlignment="Top" Width="23" Click="Plus_Click" RenderTransformOrigin="1.26,0.307"/>
+        <Button x:Name="mySlowerButton" Content="-" HorizontalAlignment="Left" Margin="77,100,0,0" Grid.Row="1" VerticalAlignment="Top" Width="23" Click="Minus_Click"/>
+        <!-- Volume slider. This slider allows you to change the speed of the media playback. -->
+        <Slider Name="speedRatioSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaSpeedRatio" Value="1" Width="70" Margin="66,127,64,307" Grid.Row="1" />
+        <!-- Seek to slider. Ths slider allows you to jump to different parts of the media playback. -->
+        <Slider Name="timelineSlider" Margin="10,417,10,0" ValueChanged="SeekToMediaPosition" Grid.Column="1" Grid.Row="1"/>
+        <Label Height="27" HorizontalAlignment="Left" Margin="61,213,0,212" Name="labelVypisZVlakna" VerticalAlignment="Center" Width="105" Content="toto pise vlakno:" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
+        <Label Height="27" HorizontalAlignment="Left" Margin="61,245,0,180" Name="labelZVlakna" VerticalAlignment="Center" Width="90" Content="" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
+        <TextBox Grid.Row="1" x:Name="myClientName" Height="20" Margin="0,158,0,244">
+         client
+        </TextBox>
+        <ListBox Name="ListBoxPred"
+        Height="79" Width="180"
+        HorizontalAlignment="Left" 
+        Margin="10,240,0,0"   
+        VerticalAlignment="Top"
+        RenderTransformOrigin="0.482,0.456" Grid.Row="1">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Key}" Margin="0" Grid.Column="0" />
+                    <TextBlock Text="{Binding Value}" Margin="0" Grid.Column="1" />
+                </Grid>
+            </DataTemplate>
+            </ListBox.ItemTemplate>
+            </ListBox>
+        <ListBox Name="ListBoxZa"
+        Height="79" Width="180"
+        HorizontalAlignment="Left" 
+        Margin="10,363,0,0"   
+        VerticalAlignment="Top"
+        RenderTransformOrigin="0.482,0.456" Grid.Row="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Key}" Margin="0" Grid.Column="0" />
+                        <TextBlock Text="{Binding Value}" Margin="0" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label Height="34" HorizontalAlignment="Left" Margin="10,324,0,94" Name="labelMyTime" VerticalAlignment="Center" Width="180" Content="" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
+    </Grid>
+</Window>
