@@ -19,11 +19,12 @@ using System.Net.Http.Headers;
 using System.Windows.Threading;
 using Newtonsoft.Json;
 using System.Web.Script.Serialization;
+using System.Collections.ObjectModel;
 
 namespace VideoClientApplication
 {
 
-    public class Alpha
+    /*public class Alpha
     {
 
         // This method that will be called when the thread is started
@@ -39,7 +40,7 @@ namespace VideoClientApplication
                 Thread.Sleep(1000);
             }
         }
-    };
+    };*/
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -48,15 +49,49 @@ namespace VideoClientApplication
     {
         bool myVideoIsPlaying = false;
         bool myVideoLoaded = false;
-        Alpha oAlpha = null;
-        Thread oThread = null;
+       // Alpha oAlpha = null;
+        //Thread oThread = null;
         Thread vlakno = null;
+        ObservableCollection<KeyValuePair<string, string>> predList = new ObservableCollection<KeyValuePair<string, string>>();
+        ObservableCollection<KeyValuePair<string, string>> zaList = new ObservableCollection<KeyValuePair<string, string>>();
 
         public MainWindow()
         {
             InitializeComponent();
             speedRatioSlider.Minimum = 0.0;
             speedRatioSlider.Maximum = 2.5;
+
+            ListBoxZa.ItemsSource = zaList;
+            ListBoxPred.ItemsSource = predList;
+        }
+
+        public void processServerData(List<KeyValuePair<string, string>> data)
+        {
+            Console.WriteLine(data.Count);
+
+            predList.Clear();
+            zaList.Clear();
+
+            TimeSpan cas = myMediaElement.Position;
+            labelMyTime.Content = cas.Hours + " : " + cas.Minutes + " : " + cas.Seconds;
+            foreach (KeyValuePair<string, string> klient in data)
+            {
+                if (klient.Key.Equals(myClientName.Text))
+                {
+                    continue;
+                }
+                if (TimeSpan.Parse(klient.Value) > cas)
+                {
+                    zaList.Add(klient);
+                }
+                else
+                {
+                    predList.Add(klient);
+                }
+            }
+
+            //data.ForEach(predList.Add);
+            //data.ForEach(zaList.Add);
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -112,8 +147,6 @@ namespace VideoClientApplication
                     //oThread.Join();
                     vlakno.Abort();
                     vlakno.Join();
-                    Console.WriteLine();
-                    Console.WriteLine("Alpha.Beta has finished");
 
                     myPlayStopButton.Content = "Play";
                 }
@@ -225,11 +258,23 @@ namespace VideoClientApplication
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var odpoved = client.GetStringAsync("http://localhost:50435/api/values?clientName=" +clientName+"&time=" + time);
-                //Console.WriteLine(odpoved.Result);
+                Console.WriteLine(odpoved.Result);
+
+                List<KeyValuePair<string, string>> m = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(odpoved.Result);
+
+                Console.WriteLine(m.Count);
+
+                // Bad Boys
+
+
+                window.labelZVlakna.Dispatcher.Invoke(() => window.processServerData(m));
                 //window.labelZVlakna.Dispatcher.Invoke(() => window.labelZVlakna.Content = odpoved.Result);
                 //Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(odpoved.Result);
-                List<KeyValuePair<string, string>> values = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<List<KeyValuePair<string, string>>>(odpoved.Result);
-                window.labelZVlakna.Dispatcher.Invoke(() => window.textBox1.Text = values[0].ToString());
+                //List<KeyValuePair<string, string>> values = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<List<KeyValuePair<string, string>>>(odpoved.Result);
+                
+
+
+                //window.labelZVlakna.Dispatcher.Invoke(() => window.textBox1.Text = values[0].ToString());
                 Thread.Sleep(1000);
             }
         }

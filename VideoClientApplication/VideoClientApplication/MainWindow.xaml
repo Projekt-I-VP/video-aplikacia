@@ -33,19 +33,20 @@
         <Label Height="27" HorizontalAlignment="Left" Margin="61,213,0,212" Name="labelVypisZVlakna" VerticalAlignment="Center" Width="105" Content="toto pise vlakno:" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
         <Label Height="27" HorizontalAlignment="Left" Margin="61,245,0,180" Name="labelZVlakna" VerticalAlignment="Center" Width="90" Content="" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
         <TextBox Grid.Row="1" x:Name="myClientName" Height="20" Margin="0,158,0,244">
-            client 
+         client
         </TextBox>
-        <TextBox Name="textBox1"
+        <ListBox Name="ListBoxPred"
         Height="79" Width="180"
         HorizontalAlignment="Left" 
         Margin="10,240,0,0"   
         VerticalAlignment="Top"
-        Text="{Binding OriginalText, UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.482,0.456" Grid.Row="1" />
-        <TextBox Name="textBox2"
+        RenderTransformOrigin="0.482,0.456" Grid.Row="1" />
+        <ListBox Name="ListBoxZa"
         Height="79" Width="180"
         HorizontalAlignment="Left" 
-        Margin="10,333,0,0"   
+        Margin="10,363,0,0"   
         VerticalAlignment="Top"
-        Text="{Binding OriginalText, UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.482,0.456" Grid.Row="1" />
+        RenderTransformOrigin="0.482,0.456" Grid.Row="1" />
+        <Label Height="34" HorizontalAlignment="Left" Margin="10,324,0,94" Name="labelMyTime" VerticalAlignment="Center" Width="180" Content="" Grid.Row="1" RenderTransformOrigin="0.491,0.413"/>
     </Grid>
 </Window>

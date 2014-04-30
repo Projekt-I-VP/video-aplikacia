@@ -29,16 +29,24 @@ namespace VideoServerApplication.Logic
 
         public void AddClientValue(string clientName, string value )
         {
-            if(cache.ContainsKey(clientName))
+            try
             {
-                cache[clientName] = value;
-            }
-            else
-            {
-                lock(this)
+                if (cache.ContainsKey(clientName))
                 {
-                    cache.Add(clientName, value);
+                    cache[clientName] = value;
                 }
+                else
+                {
+                    lock (this)
+                    {
+                        cache.Add(clientName, value);
+                    }
+                }
+            }
+            catch (ArgumentNullException)
+            {
+
+                Console.WriteLine("daco skaplo... asi nedoposielalo abo co... nabuduce ma zatvor krajsie!!!");
             }
         }
 
