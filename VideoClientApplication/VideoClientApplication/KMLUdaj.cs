@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VideoClientApplication
 {
-    class KMLudaj
+    public class KMLUdaj
     {
         // key properties
 
@@ -16,13 +16,13 @@ namespace VideoClientApplication
 
 
 
-        public KMLudaj()
+        public KMLUdaj()
         {
             //prazdny konstruktor
         }
 
         // constructor
-        public KMLudaj(string lat, string lon, string bearing, TimeSpan time)
+        public KMLUdaj(string lat, string lon, string bearing, TimeSpan time)
         {
             UdajLat = lat;
             UdajLon = lon;

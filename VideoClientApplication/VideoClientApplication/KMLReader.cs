@@ -19,12 +19,12 @@ namespace VideoClientApplication
             file = new FileInfo(@"C:\Users\jDzama\Documents\Visual Studio 2012\Projects\kvideudata.kml");
         }
 
-        public void  parsuj(out List<System.TimeSpan> listCasov, out List<KMLudaj> listUdajov)
+        public void  parsuj(out List<System.TimeSpan> listCasov, out List<KMLUdaj> listUdajov)
         {
             System.TimeSpan zaciatocnyCas = new System.TimeSpan();
             Boolean prvyUdaj = true;
             listCasov = new List<System.TimeSpan>();
-            listUdajov = new List<KMLudaj>();
+            listUdajov = new List<KMLUdaj>();
 
             if (!file.Exists)
             {
@@ -49,7 +49,7 @@ namespace VideoClientApplication
                 {
                     foreach (var schemaData in extendedData.SchemaData)
                     {
-                        KMLudaj udaj = new KMLudaj();
+                        KMLUdaj udaj = new KMLUdaj();
                         //vytvorim novy udaj, kde nahadzem hodnoty
                         foreach (SimpleData sd in schemaData.SimpleData)
                         {
