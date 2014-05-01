@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml>
+<kml xmlns="http://www.opengis.net/kml/2.2">
 <Document id="">
 <Schema name="GeoVideo" id="GeoVideo">
 <SimpleField name="UTC_Time" type="string" />

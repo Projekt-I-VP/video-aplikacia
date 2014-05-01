@@ -133,6 +133,7 @@ namespace VideoClientApplication
             string kmlName = dlg.FileName + ".kml";
             KMLReader kmlreader = new KMLReader(kmlName);
             kmlreader.parsuj(out listCasov, out listUdajov);
+            Console.WriteLine("Parsujem toto kml-ko: "+kmlName);
         }
 
         private void Element_MediaOpened(object sender, EventArgs e)
