@@ -21,7 +21,6 @@ using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using System.Collections.ObjectModel;
 
-
 namespace VideoClientApplication
 {
 
@@ -51,8 +50,7 @@ namespace VideoClientApplication
         bool myVideoIsPlaying = false;
         bool myVideoLoaded = false;
 
-        List<KMLUdaj> listUdajov;
-        List<System.TimeSpan> listCasov;
+        SortedList<System.TimeSpan,KMLUdaj> listUdajov;
 
        // Alpha oAlpha = null;
         //Thread oThread = null;
@@ -72,7 +70,7 @@ namespace VideoClientApplication
 
         public void processServerData(List<KeyValuePair<string, string>> data)
         {
-            Console.WriteLine(data.Count);
+            //Console.WriteLine(data.Count);
 
             predList.Clear();
             zaList.Clear();
@@ -93,6 +91,12 @@ namespace VideoClientApplication
                 {
                     predList.Add(klient);
                 }
+
+                List<System.TimeSpan> keysList = new List<System.TimeSpan>(listUdajov.Keys);
+                //int kIndex = keysList.BinarySearch(TimeSpan.Parse(klient.Value));
+                int kIndex = keysList.BinarySearch(TimeSpan.Parse("00:00:10.00125"));
+                kIndex = kIndex >= 0 ? kIndex : ~kIndex;
+                Console.WriteLine("index oneho "+kIndex);
             }
 
             //data.ForEach(predList.Add);
@@ -132,8 +136,10 @@ namespace VideoClientApplication
         {
             string kmlName = dlg.FileName + ".kml";
             KMLReader kmlreader = new KMLReader(kmlName);
-            kmlreader.parsuj(out listCasov, out listUdajov);
-            Console.WriteLine("toto kmlko je uz sparsovane: "+kmlName);
+            listUdajov = kmlreader.parsuj();
+
+            //Console.WriteLine(listUdajov.Values[0].UdajLat + listUdajov.Values[0].UdajTime);
+            //Console.WriteLine("toto kmlko je uz sparsovane: "+kmlName);
         }
 
         private void Element_MediaOpened(object sender, EventArgs e)
@@ -273,11 +279,11 @@ namespace VideoClientApplication
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var odpoved = client.GetStringAsync("http://localhost:50435/api/values?clientName=" +clientName+"&time=" + time);
-                Console.WriteLine(odpoved.Result);
+                //Console.WriteLine(odpoved.Result);
 
                 List<KeyValuePair<string, string>> m = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(odpoved.Result);
 
-                Console.WriteLine(m.Count);
+                //Console.WriteLine(m.Count);
 
                 // Bad Boys
 

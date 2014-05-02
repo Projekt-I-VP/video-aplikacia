@@ -22,12 +22,12 @@ namespace VideoClientApplication
             /*file = new FileInfo(@"D:\Moje_Dokumenty\skola\ness\video-aplikacia\VideoClientApplication\VideoClientApplication\Files\iGV_20140310172323.mp4.kml");*/
         }
 
-        public void  parsuj(out List<System.TimeSpan> listCasov, out List<KMLUdaj> listUdajov)
+        public SortedList<System.TimeSpan, KMLUdaj> parsuj()
         {
             System.TimeSpan zaciatocnyCas = new System.TimeSpan();
             Boolean prvyUdaj = true;
-            listCasov = new List<System.TimeSpan>();
-            listUdajov = new List<KMLUdaj>();
+
+            SortedList<System.TimeSpan, KMLUdaj> listUdajov = new SortedList<System.TimeSpan, KMLUdaj>();
 
             if (!file.Exists)
             {
@@ -85,7 +85,6 @@ namespace VideoClientApplication
                                         prvyUdaj = false;
                                     }
                                     udaj.UdajTime = System.TimeSpan.Parse(szDataValue) - zaciatocnyCas;
-                                    listCasov.Add(udaj.UdajTime);
                                     break;
                                 default:
                                     break;
@@ -93,11 +92,12 @@ namespace VideoClientApplication
                             //pridal som jeden udaj
                         }
                         //mam hodnoty v udaj, mozem to hadzat do pola po tomto napr...
-                        listUdajov.Add(udaj);
+                        listUdajov.Add(udaj.UdajTime, udaj);
                     }
 
                 }
             }
+            return listUdajov;
         }
 
 
