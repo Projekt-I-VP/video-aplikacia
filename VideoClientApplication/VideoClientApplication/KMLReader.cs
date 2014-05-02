@@ -16,9 +16,10 @@ namespace VideoClientApplication
         public KMLReader(string full_path)
         {
             Console.WriteLine("cesta: "+full_path);
-            /*file = new FileInfo("@"+full_path);*/
+            //file = new FileInfo("@"+full_path);
+            file = new FileInfo(full_path);
             /*file = new FileInfo(@"C:\Users\jDzama\Documents\Visual Studio 2012\Projects\kvideudata.kml");*/
-            file = new FileInfo(@"D:\Moje_Dokumenty\skola\ness\video-aplikacia\VideoClientApplication\VideoClientApplication\Files\iGV_20140310172323.mp4.kml");
+            /*file = new FileInfo(@"D:\Moje_Dokumenty\skola\ness\video-aplikacia\VideoClientApplication\VideoClientApplication\Files\iGV_20140310172323.mp4.kml");*/
         }
 
         public void  parsuj(out List<System.TimeSpan> listCasov, out List<KMLUdaj> listUdajov)
