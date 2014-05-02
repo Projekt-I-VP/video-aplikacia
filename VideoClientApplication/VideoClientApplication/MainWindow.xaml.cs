@@ -45,12 +45,17 @@ namespace VideoClientApplication
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public partial class MainWindow : Window
     {
         bool myVideoIsPlaying = false;
         bool myVideoLoaded = false;
 
         SortedList<System.TimeSpan,KMLUdaj> listUdajov;
+        List<System.TimeSpan> keysList;
+        List<KMLUdaj> valuesList;
 
        // Alpha oAlpha = null;
         //Thread oThread = null;
@@ -92,11 +97,9 @@ namespace VideoClientApplication
                     predList.Add(klient);
                 }
 
-                List<System.TimeSpan> keysList = new List<System.TimeSpan>(listUdajov.Keys);
-                //int kIndex = keysList.BinarySearch(TimeSpan.Parse(klient.Value));
-                int kIndex = keysList.BinarySearch(TimeSpan.Parse("00:00:10.00125"));
+                int kIndex = keysList.BinarySearch(TimeSpan.Parse(klient.Value));
                 kIndex = kIndex >= 0 ? kIndex : ~kIndex;
-                Console.WriteLine("index oneho "+kIndex);
+                Console.WriteLine("index udaja " + klient.Key + " je " + kIndex + " latitude: " + valuesList[kIndex].UdajLat + " longitude: " + valuesList[kIndex].UdajLon + " bearing: " + valuesList[kIndex].UdajBearing);
             }
 
             //data.ForEach(predList.Add);
@@ -137,7 +140,8 @@ namespace VideoClientApplication
             string kmlName = dlg.FileName + ".kml";
             KMLReader kmlreader = new KMLReader(kmlName);
             listUdajov = kmlreader.parsuj();
-
+            keysList = new List<System.TimeSpan>(listUdajov.Keys);
+            valuesList = new List<KMLUdaj>(listUdajov.Values);
             //Console.WriteLine(listUdajov.Values[0].UdajLat + listUdajov.Values[0].UdajTime);
             //Console.WriteLine("toto kmlko je uz sparsovane: "+kmlName);
         }
