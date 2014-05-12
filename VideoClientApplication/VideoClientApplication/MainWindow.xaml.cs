@@ -117,12 +117,12 @@ namespace VideoClientApplication
                 coordinate.Course = Convert.ToDouble(valuesList[kIndex].UdajBearing.Trim().Replace(".", ","));
 
                 double distance = myCoordinates.GetDistanceTo(coordinate);
-                
-                Console.WriteLine("index udaja " + klient.Key + " je " + kIndex 
-                    + " latitude: " + valuesList[kIndex].UdajLat 
-                    + " longitude: " + valuesList[kIndex].UdajLon
+
+                Console.WriteLine("index udaja " + klient.Key + " je " + kIndex
+                    //+ " latitude: " + valuesList[kIndex].UdajLat 
+                    //+ " longitude: " + valuesList[kIndex].UdajLon
                     + " vzdialenost ku mne je " + distance
-                    + " bearing: "  + valuesList[kIndex].UdajBearing
+                    + " bearing: " + valuesList[kIndex].UdajBearing
                     + " vidno ma " + isVisible(distance, coordinate));
             }
 
@@ -132,10 +132,11 @@ namespace VideoClientApplication
 
         private Boolean isVisible(double distance, GeoCoordinate coordinate)
         {
-            Console.Write(" natocenie..." + myCoordinates.Course);
-            return (distance < 100/*???*/) && 
-                (Math.Abs(coordinate.Course - BearingTo(coordinate.Latitude, coordinate.Longitude))<80/2 
-                || ((coordinate.Course + BearingTo(coordinate.Latitude, coordinate.Longitude) % 360)<80/2)/*FOV*/);
+            Console.Write(" natocenie..." + myCoordinates.Course+
+            " bearing to " + BearingTo(coordinate.Latitude, coordinate.Longitude));
+            return (distance < 100/*???*/) &&
+                ((Math.Abs(coordinate.Course - BearingTo(coordinate.Latitude, coordinate.Longitude))<80/2 
+                || (360-Math.Abs(coordinate.Course - BearingTo(coordinate.Latitude, coordinate.Longitude))<80/2)/*FOV*/));
         }
 
         public double BearingTo(double lat, double lng)
