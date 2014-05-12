@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using System.Collections.ObjectModel;
+using System.Device.Location;
 
 namespace VideoClientApplication
 {
@@ -56,6 +57,7 @@ namespace VideoClientApplication
         SortedList<System.TimeSpan,KMLUdaj> listUdajov;
         List<System.TimeSpan> keysList;
         List<KMLUdaj> valuesList;
+        GeoCoordinate myCoordinates = new GeoCoordinate();
 
        // Alpha oAlpha = null;
         //Thread oThread = null;
@@ -82,6 +84,16 @@ namespace VideoClientApplication
 
             TimeSpan cas = myMediaElement.Position;
             labelMyTime.Content = cas.Hours + " : " + cas.Minutes + " : " + cas.Seconds;
+
+            int myKIndex = keysList.BinarySearch(myMediaElement.Position);
+            myKIndex = myKIndex >= 0 ? myKIndex : ~myKIndex;
+
+            //Console.WriteLine(Convert.ToDouble("21,225890"));
+            Console.WriteLine("                 "+valuesList[myKIndex].UdajLon.Trim().Replace(".",","));
+            myCoordinates.Longitude = Convert.ToDouble(valuesList[myKIndex].UdajLon.Trim().Replace(".", ","));
+            myCoordinates.Latitude = Convert.ToDouble(valuesList[myKIndex].UdajLat.Trim().Replace(".", ","));
+            myCoordinates.Course = Convert.ToDouble(valuesList[myKIndex].UdajBearing.Trim().Replace(".", ","));
+
             foreach (KeyValuePair<string, string> klient in data)
             {
                 if (klient.Key.Equals(myClientName.Text))
@@ -99,12 +111,86 @@ namespace VideoClientApplication
 
                 int kIndex = keysList.BinarySearch(TimeSpan.Parse(klient.Value));
                 kIndex = kIndex >= 0 ? kIndex : ~kIndex;
-                Console.WriteLine("index udaja " + klient.Key + " je " + kIndex + " latitude: " + valuesList[kIndex].UdajLat + " longitude: " + valuesList[kIndex].UdajLon + " bearing: " + valuesList[kIndex].UdajBearing);
+
+                GeoCoordinate coordinate = new GeoCoordinate(Convert.ToDouble(valuesList[kIndex].UdajLat.Trim().Replace(".", ",")),
+                    Convert.ToDouble(valuesList[kIndex].UdajLon.Trim().Replace(".", ",")));
+                coordinate.Course = Convert.ToDouble(valuesList[kIndex].UdajBearing.Trim().Replace(".", ","));
+
+                double distance = myCoordinates.GetDistanceTo(coordinate);
+                
+                Console.WriteLine("index udaja " + klient.Key + " je " + kIndex 
+                    + " latitude: " + valuesList[kIndex].UdajLat 
+                    + " longitude: " + valuesList[kIndex].UdajLon
+                    + " vzdialenost ku mne je " + distance
+                    + " bearing: "  + valuesList[kIndex].UdajBearing
+                    + " vidno ma " + isVisible(distance, coordinate));
             }
 
             //data.ForEach(predList.Add);
             //data.ForEach(zaList.Add);
         }
+
+        private Boolean isVisible(double distance, GeoCoordinate coordinate)
+        {
+            Console.Write(" natocenie..." + myCoordinates.Course);
+            return (distance < 100/*???*/) && 
+                (Math.Abs(coordinate.Course - BearingTo(coordinate.Latitude, coordinate.Longitude))<80/2 
+                || ((coordinate.Course + BearingTo(coordinate.Latitude, coordinate.Longitude) % 360)<80/2)/*FOV*/);
+        }
+
+        public double BearingTo(double lat, double lng)
+        {
+            double lat1 = DegreeToRadian(myCoordinates.Latitude);
+            double lat2 = DegreeToRadian(lat);
+            double dLon = DegreeToRadian(lng) - (DegreeToRadian(myCoordinates.Longitude));
+
+            double y = Math.Sin(dLon) * Math.Cos(lat2);
+            double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
+            double brng = Math.Atan2(y, x);
+
+            return (RadianToDegree(brng) + 360) % 360;
+        }
+
+        /*public double bearing()
+        {
+            double myx = 1;
+            double myy = 2;
+            double kux = 3;
+            double kuy = 4;
+
+
+            if (myx == kux) myx = myx + 1;
+            if (kuy == myy) myy = myy + 1;
+
+            if (myx >= kux)
+            {
+                if (myy >= kuy)
+                {
+                    double bearing = Math.Atan(Math.Abs(kux - myx) / Math.Abs(kuy - myy)); //+180
+                }
+                else
+                {
+                    double bearing = Math.Atan(Math.Abs(kuy - myy) / Math.Abs(myx - kux)); //+270
+                }
+            }
+            else
+            {
+                if (myy >= kuy)
+                {
+                    double bearing = Math.Atan(Math.Abs(kuy - myy) / Math.Abs(myx - kux)); //+90
+                }
+                else
+                {
+                    double bearing = Math.Atan(Math.Abs(kux - myx) / Math.Abs(kuy - myy)); //+0
+                }
+            }
+
+            return 0.0;
+        }*/
+
+        public double DegreeToRadian(double angle) { return Math.PI * angle / 180.0; }
+
+        public double RadianToDegree(double angle) { return 180.0 * angle / Math.PI; }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -284,7 +370,7 @@ namespace VideoClientApplication
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var odpoved = client.GetStringAsync("http://localhost:50435/api/values?clientName=" +clientName+"&time=" + time);
                 //Console.WriteLine(odpoved.Result);
-
+                
                 List<KeyValuePair<string, string>> m = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(odpoved.Result);
 
                 //Console.WriteLine(m.Count);
